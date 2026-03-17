@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juan Cruz Soares Gache</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #1576BB;
+      --blue-light: #1576BB22;
+      --text: #5D5E61;
+      --text-light: #8a8b8d;
+      --bg-white: #ffffff;
+      --bg-gray: #f5f6f7;
+      --sidebar-width: 240px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: var(--text);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.7;
+      background: var(--bg-white);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--bg-white);
+      border-right: 1px solid #e8e9eb;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 30px;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .sidebar-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.3px;
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+    }
+
+    .sidebar nav ul li {
+      margin-bottom: 8px;
+    }
+
+    .sidebar nav ul li a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 13px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 8px 0;
+      display: block;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar nav ul li a::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 2px;
+      background: var(--blue);
+      transition: width 0.3s ease;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li a.active {
+      color: var(--blue);
+    }
+
+    .sidebar nav ul li a:hover::before,
+    .sidebar nav ul li a.active::before {
+      width: 20px;
+    }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1100;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      background: var(--bg-white);
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      border: none;
+      padding: 8px 6px;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: 999;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      margin-left: var(--sidebar-width);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 100;
+      color: var(--blue);
+      margin-bottom: 40px;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── HEADER / HERO ── */
+    #inicio {
+      background: var(--bg-white);
+    }
+
+    #inicio .section-inner {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .hero-name {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 30px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-tagline {
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.5;
+      border-left: 3px solid var(--blue);
+      padding-left: 20px;
+      margin-top: 40px;
+    }
+
+    /* ── HISTORIA ── */
+    #historia {
+      background: var(--bg-gray);
+    }
+
+    .historia-text {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text);
+    }
+
+    .historia-text strong {
+      color: var(--blue);
+      font-weight: 500;
+    }
+
+    .historia-bullets {
+      margin-top: 16px;
+      margin-bottom: 16px;
+      padding-left: 20px;
+    }
+
+    .historia-bullets li {
+      margin-bottom: 6px;
+      line-height: 1.8;
+    }
+
+    /* ── EXPERIENCE ── */
+    #experiencia {
+      background: var(--bg-white);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 0;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 50px;
+      padding-left: 30px;
+      border-left: 1px solid #dddee0;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+      border-left: 1px solid transparent;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 4px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-role {
+      font-size: 18px;
+      font-weight: 400;
+      color: #3a3b3d;
+      margin-bottom: 2px;
+    }
+
+    .timeline-company {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .timeline-desc {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .timeline-desc ul {
+      padding-left: 18px;
+      margin-top: 8px;
+    }
+
+    .timeline-desc ul li {
+      margin-bottom: 4px;
+    }
+
+    /* ── EDUCATION ── */
+    #educacion {
+      background: var(--bg-gray);
+    }
+
+    .edu-item {
+      margin-bottom: 40px;
+    }
+
+    .edu-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .edu-date {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .edu-degree {
+      font-size: 18px;
+      font-weight: 400;
+      color: #3a3b3d;
+      margin-bottom: 2px;
+    }
+
+    .edu-school {
+      font-size: 13px;
+      color: var(--text-light);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .edu-desc {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    /* ── CONTACT ── */
+    #contacto {
+      background: var(--bg-white);
+    }
+
+    .contact-text {
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .linkedin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      background: var(--blue);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    .linkedin-btn:hover {
+      background: #1265a3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(21, 118, 187, 0.3);
+    }
+
+    .linkedin-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+
+    /* ── CANVAS BACKGROUND ── */
+    .bg-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── FADE IN ANIMATION ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg-gray);
+      text-align: center;
+      padding: 30px 40px;
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .hero-name {
+        font-size: 36px;
+      }
+
+      .hero-tagline {
+        font-size: 18px;
+      }
+
+      .section-inner {
+        padding: 60px 24px;
+      }
+
+      .section-title {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Overlay for mobile menu -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Hamburger -->
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-name">Soares Gache,<br>Juan Cruz</div>
+    <nav>
+      <ul>
+        <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+        <li><a href="#historia" class="nav-link">Historia</a></li>
+        <li><a href="#experiencia" class="nav-link">Experiencia</a></li>
+        <li><a href="#educacion" class="nav-link">Educación</a></li>
+        <li><a href="#contacto" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- INICIO -->
+    <section id="inicio">
+      <canvas class="bg-canvas" id="canvas-hero"></canvas>
+      <div class="section-inner">
+        <div class="fade-up">
+          <p class="section-label">Growth Marketing &amp; Innovación Digital</p>
+          <h1 class="hero-name">Juan Cruz<br>Soares Gache</h1>
+          <p class="hero-title">Lic. en Sistemas · MBA (orientación a Marketing Digital) · Buenos Aires, Argentina</p>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.15s;">
+          <p class="hero-tagline">La cabeza de sistemas y el corazón en el negocio 😉</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORIA -->
+    <section id="historia">
+      <div class="section-inner">
+        <div class="fade-up">
+          <p class="section-label">Sobre mí</p>
+          <h2 class="section-title">Mi Historia</h2>
+        </div>
+        <div class="fade-up historia-text" style="transition-delay: 0.1s;">
+          <p>Estudié la carrera de <strong>Licenciatura en Sistemas de Información</strong>, pero desde hace más de 15 años que trabajo en proyectos de estrategia, procesos, comunicación y publicidad.</p>
+          <ul class="historia-bullets">
+            <li><strong>Inbound Marketing</strong>: diseño y desarrollo de Plataformas Digitales, Content Marketing, SEO, landing pages, CRM, Lead Scoring y campañas de Marketing Automation</li>
+            <li><strong>Lead Generation Campaigns</strong>: diseño e implementación de campañas de performance, optimización de funnels de conversión.</li>
+            <li><strong>Digital Transformation</strong>: diseño y desarrollo de soluciones para optimización de procesos y reducción de costos operativos</li>
+          </ul>
+          <p>Soy un apasionado por el mundo digital y me encantan los desafíos donde el objetivo es aprovechar plataformas y soluciones digitales, nuevas o existentes, para automatizar procesos, reducir costos y/o entender mejor algunas situaciones de negocio, donde el comportamiento online de los usuarios, consumidores o clientes permite generar insights que pueden ser el inicio de un proceso de <strong>transformación digital</strong> para una compañía.</p>
+          <br>
+          <p>Digital no solo es marketing. También es ventas, relaciones públicas, investigación de mercado, atención al consumidor, reclutamiento, etc. <strong>Una compañía realmente se transforma digitalmente cuando todas sus áreas aprovechan al máximo las ventajas del mundo digital.</strong></p>
+          <br>
+          <p>Actualmente me desempeño como Growth Marketing Director en Ingenes, luego de haber sido Head of Digital en Genomma Lab, socio y director regional en Social Snack y gerente de consultoría en Deloitte, a nivel regional.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCIA LABORAL -->
+    <section id="experiencia">
+      <div class="section-inner">
+        <div class="fade-up">
+          <p class="section-label">Trayectoria</p>
+          <h2 class="section-title">Experiencia Laboral</h2>
+        </div>
+        <div class="timeline fade-up" style="transition-delay: 0.1s;">
+
+          <div class="timeline-item">
+            <p class="timeline-date">2020 – Presente</p>
+            <h3 class="timeline-role">Growth &amp; Marketing Director</h3>
+            <p class="timeline-company">Ingenes</p>
+            <div class="timeline-desc">
+              <p>Definición, dirección, ejecución y supervisión de la estrategia de comunicación de la compañía, con el objetivo de atraer, educar, informar y acompañar a los pacientes a lo largo de sus tratamientos de reproducción asistida.</p>
+              <ul>
+                <li>Definición, implementación y gestión de funnels de atracción de pacientes, orgánicos y pagos, optimizando procesos de nutrición de leads a través de Marketing Automation.</li>
+                <li>Dirección y supervisión de la producción de contenidos (redacción, diseño gráfico, producción y post-producción audiovisual)</li>
+                <li>Dirección y supervisión de la gestión de las campañas publicitarias en medios tradicionales y digitales.</li>
+                <li>Diseño de la imagen de las 18 sucursales de Ingenes (14 en México y 4 en Estados Unidos). Instalación de nuevas aperturas y mantenimiento de sucursales existentes.</li>
+                <li>Liderazgo de los proyectos de SEO y UX para los activos digitales de la compañía.</li>
+                <li>Dirección del diseño editorial de libros de testimoniales.</li>
+                <li>Liderazgo y coordinación de implementación de soluciones tecnológicas para automatizar y simplificar procesos operativos (Transformación Digital)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <p class="timeline-date">2017 – 2020</p>
+            <h3 class="timeline-role">Head of Digital</h3>
+            <p class="timeline-company">Genomma Lab</p>
+            <div class="timeline-desc">
+              <p>Ejecución, dirección y supervisión de las iniciativas que la compañía ejecuta en medios digitales, a nivel regional.</p>
+              <ul>
+                <li>Diseño, desarrollo, implementación, actualización y mantenimiento de los activos digitales de la compañía y de sus marcas</li>
+                <li>Gestión y optimización del presupuesto digital de la compañía</li>
+                <li>Implementación, configuración, análisis y optimización de campañas publicitarias en medios digitales para marketing, comercial e investigación de mercado</li>
+                <li>Actualización y optimización de catálogos online de las marcas en las plataformas de e-commerce de clientes (pure players, marketplaces, brick &amp; clicks y last-milers)</li>
+                <li>Diseño, desarrollo, implementación, soporte y mantenimiento de nuevas herramientas para optimizar procesos, reducir costos y mejorar la eficiencia operativa de la compañía</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <p class="timeline-date">2010 – 2016</p>
+            <h3 class="timeline-role">Socio &amp; Managing Director</h3>
+            <p class="timeline-company">Social Snack</p>
+            <div class="timeline-desc">
+              <p>Socio &amp; Director de Social Snack. Responsable de la operación de las oficinas de México &amp; Panamá (+25 personas) y del desarrollo comercial de la compañía a nivel regional.</p>
+              <ul>
+                <li>Involucrado en los proyectos más importantes de la región, trabajando para clientes como el Canal de Panamá, Hyundai, Hilton, Heineken, Cinemex y El Palacio de Hierro, entre otros.</li>
+                <li>Participación en entrevistas en radio y TV y exposición en 30+ eventos sobre Marketing Digital, segmentación, Social CRM, Beacons &amp; Proximity Marketing &amp; e-commerce.</li>
+                <li>Pilares de conocimiento: Estrategia &amp; Comunicación, Gestión &amp; Optimización de Campañas Publicitarias, Diseño &amp; Desarrollo de Plataformas Digitales, Análisis de Datos &amp; Estadísticas.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <p class="timeline-date">2013 – 2015</p>
+            <h3 class="timeline-role">Profesor</h3>
+            <p class="timeline-company">ADEN Business School</p>
+            <div class="timeline-desc">
+              <p>Clases de módulos de maestrías &amp; especializaciones: Marketing Digital, Gestión de redes sociales y medios digitales, Web Analytics &amp; Social Metrics, Social CRM y e-commerce.</p>
+              <ul>
+                <li>Clases en especializaciones de habilidades gerenciales y dirección estratégica de ventas, en formatos abiertos e "In Company" en Ecuador, Colombia, Panamá, Costa Rica, Honduras, Nicaragua, El Salvador y Guatemala.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <p class="timeline-date">2006 – 2010</p>
+            <h3 class="timeline-role">Gerente de Consultoría</h3>
+            <p class="timeline-company">Deloitte</p>
+            <div class="timeline-desc">
+              <p>Gerente regional de Consultoría "Strategy &amp; Operations" con liderazgo de más de 15 proyectos en Argentina, Perú, Colombia, Ecuador &amp; Panamá.</p>
+              <ul>
+                <li>Gerenciamiento de Proyectos de Implementación de Oficinas de Gestión de Proyectos (PMO), Control y Seguimiento de Implementaciones de Soluciones Tecnológicas y Optimización de Procesos.</li>
+                <li>Expositor en eventos: Habeas-Data, Modelos de Gestión Comercial en Seguros, Seguridad Informática, Inteligencia de Negocios y CRM (Argentina, Colombia &amp; Guatemala)</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCACIÓN -->
+    <section id="educacion">
+      <div class="section-inner">
+        <div class="fade-up">
+          <p class="section-label">Formación</p>
+          <h2 class="section-title">Educación</h2>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.1s;">
+
+          <div class="edu-item">
+            <p class="edu-date">2017 – 2018</p>
+            <h3 class="edu-degree">MBA (orientación Digital Marketing)</h3>
+            <p class="edu-school">EUNCET – Barcelona, España</p>
+            <div class="edu-desc">
+              <p>El MBA era una de las grandes cuentas pendientes. Aunque el primer "MBA" fue haber tenido la posibilidad de dirigir una compañía, hacerla crecer y haberla vendido. Fue una experiencia increíble y difícil.</p>
+            </div>
+          </div>
+
+          <div class="edu-item">
+            <p class="edu-date">2018</p>
+            <h3 class="edu-degree">Specialization in Digital Marketing</h3>
+            <p class="edu-school">The George Washington University</p>
+            <div class="edu-desc">
+              <p>Formalización en un diploma del conocimiento y experiencia acumulados tras casi 10 años dedicados al mundo digital. Haber dejado Deloitte y la relación de dependencia fue una de las decisiones que más incertidumbre generó, pero de la cual estará agradecido toda la vida.</p>
+            </div>
+          </div>
+
+          <div class="edu-item">
+            <p class="edu-date">1998 – 2002</p>
+            <h3 class="edu-degree">Licenciatura en Sistemas de Información</h3>
+            <p class="edu-school">Universidad CAECE – Argentina</p>
+            <div class="edu-desc">
+              <p>Desde chico tuvo claro que estudiaría sistemas por su gran fanatismo sobre el software y hardware. Ese fanatismo por una PC 286 con un disco de 40 Mb y diskettera de 3.5" se transformó en admiración total por ese mundo online que descubrió cuando le enchufó el primer modem de 33.6 kbps que dejaba a sus padres sin teléfono cuando navegaba en internet 😉</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+      <div class="section-inner">
+        <div class="fade-up">
+          <p class="section-label">Conectemos</p>
+          <h2 class="section-title">Contacto</h2>
+        </div>
+        <div class="fade-up" style="transition-delay: 0.1s;">
+          <p class="contact-text">Si quieres hablar sobre estrategia digital, marketing, tecnología o explorar alguna oportunidad de colaboración, encuéntrame en LinkedIn.</p>
+          <a href="https://www.linkedin.com/in/soaresgache/" target="_blank" rel="noopener" class="linkedin-btn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Ver perfil en LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2026 Juan Cruz Soares Gache
+    </footer>
+
+  </div>
+
+  <script>
+    // ── HAMBURGER MENU ──
+    const hamburger = document.getElementById('hamburger');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+    });
+
+    overlay.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+      });
+    });
+
+    // ── ACTIVE NAV LINK ON SCROLL ──
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.remove('active'));
+          const activeLink = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }, { root: null, rootMargin: '-30% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(section => observer.observe(section));
+
+    // ── FADE IN ON SCROLL ──
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    fadeEls.forEach(el => fadeObserver.observe(el));
+
+    // ── HERO CANVAS – Floating particles ──
+    (function() {
+      const canvas = document.getElementById('canvas-hero');
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(dpr, dpr);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function getSize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        return { w: rect.width, h: rect.height };
+      }
+
+      const particles = [];
+      for (let i = 0; i < 40; i++) {
+        const s = getSize();
+        particles.push({
+          x: Math.random() * (s.w || 1200),
+          y: Math.random() * (s.h || 800),
+          r: Math.random() * 2.5 + 0.5,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          alpha: Math.random() * 0.15 + 0.03
+        });
+      }
+
+      function draw() {
+        const { w, h } = getSize();
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = w;
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(21, 118, 187, ${p.alpha})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+
+</body>
+</html>
